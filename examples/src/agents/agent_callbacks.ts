@@ -1,9 +1,18 @@
 import { initializeAgentExecutorWithOptions } from "langchain/agents";
+import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { OpenAI } from "langchain/llms/openai";
-import { SerpAPI } from "langchain/tools";
+import { NodeFileStore } from "langchain/stores/file/node";
+import { ReadFileTool, SerpAPI, Tool, WriteFileTool } from "langchain/tools";
 import { Calculator } from "langchain/tools/calculator";
+import { WebBrowser } from "langchain/tools/webbrowser";
 
 const model = new OpenAI({ temperature: 0 });
+const store = new NodeFileStore("node-file-store/custom_agent");
+const embeddings = new OpenAIEmbeddings(
+  process.env.AZURE_OPENAI_API_KEY
+    ? { azureOpenAIApiDeploymentName: "Embeddings2" }
+    : {}
+);
 const tools = [
   new SerpAPI(process.env.SERPAPI_API_KEY, {
     location: "Austin,Texas,United States",
@@ -11,12 +20,17 @@ const tools = [
     gl: "us",
   }),
   new Calculator(),
+  // new ReadFileTool({store}) as unknown as Tool,
+  // new WriteFileTool({store}) as unknown as Tool,
+  new WebBrowser({model, embeddings}),
 ];
 const executor = await initializeAgentExecutorWithOptions(tools, model, {
   agentType: "zero-shot-react-description",
 });
 
-const input = `Who is Olivia Wilde's boyfriend? What is his current age raised to the 0.23 power?`;
+const input = `Visit https://nextjs.org/docs, use this information, visit the most relevant link from the page and generate step by step instructions for creating a landing page using Next.js.`;
+// const input = `Read file test.txt and write the result to test2.txt.`;
+// const input = `Who is Olivia Wilde's boyfriend? What is his current age raised to the 0.23 power?`;
 const result = await executor.run(input, [
   {
     handleAgentAction(action, runId) {

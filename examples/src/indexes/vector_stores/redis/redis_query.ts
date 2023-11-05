@@ -27,7 +27,7 @@ console.log(simpleRes);
 */
 
 /* Search in the vector DB using filters */
-const filterRes = await vectorStore.similaritySearch("redis", 3, ["qux"]);
+const filterRes = await vectorStore.similaritySearch("quick", 3, ["bar"]);
 console.log(filterRes);
 /*
 [

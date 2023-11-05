@@ -31,7 +31,7 @@ export const run = async () => {
 
   console.log("Loaded agent.");
 
-  const input = `What is the value of foo?`;
+  const input = `What is the value of bar?`;
 
   console.log(`Executing with input "${input}"...`);
 

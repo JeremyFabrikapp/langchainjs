@@ -8,10 +8,10 @@ const vectorStore = new MemoryVectorStore(new OpenAIEmbeddings());
 const babyAGI = BabyAGI.fromLLM({
   llm: new OpenAI({ temperature: 0 }),
   vectorstore: vectorStore,
-  maxIterations: 3,
+  maxIterations: 20,
 });
 
-await babyAGI.call({ objective: "Write a weather report for SF today" });
+await babyAGI.call({ objective: "Write a short weather report for SF today with only the temperature and nothing else." });
 /*
 
 *****TASK LIST*****
