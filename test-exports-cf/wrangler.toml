@@ -1,3 +1,4 @@
 name = "test-exports-cf"
 main = "src/index.ts"
 compatibility_date = "2023-04-05"
+node_compat = true
